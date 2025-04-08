@@ -71,14 +71,14 @@ export default function ShazoomApp() {
         <div className="md:col-span-2">
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle>Identify a Song</CardTitle>
+              <CardTitle>Identify a song</CardTitle>
               <CardDescription>Upload an audio file or use one of our examples to identify a song</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="upload" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="upload">Upload Audio</TabsTrigger>
-                  <TabsTrigger value="examples">Example Samples</TabsTrigger>
+                  <TabsTrigger value="upload">Upload audio</TabsTrigger>
+                  <TabsTrigger value="examples">Example samples</TabsTrigger>
                 </TabsList>
                 <TabsContent value="upload">
                   <AudioUploader
@@ -130,7 +130,7 @@ export default function ShazoomApp() {
 
           <Card className="shadow-lg mt-6">
             <CardHeader>
-              <CardTitle>Search Songs</CardTitle>
+              <CardTitle>Search songs</CardTitle>
               <CardDescription>Search for songs in our database</CardDescription>
             </CardHeader>
             <CardContent>

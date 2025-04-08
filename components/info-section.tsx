@@ -37,7 +37,7 @@ export default function InfoSection({ songs }: InfoSectionProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Music className="h-5 w-5" />
-            Available Songs
+            Available songs
           </CardTitle>
         </CardHeader>
         <CardContent>
