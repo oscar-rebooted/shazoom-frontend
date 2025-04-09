@@ -28,7 +28,6 @@ export default function AudioUploader({
   const [dragActive, setDragActive] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [fileKey, setFileKey] = useState<string | null>(null)
-  const [uploadUrl, setUploadUrl] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Log presigned URL info when a file is selected, but don't upload yet
@@ -41,17 +40,25 @@ export default function AudioUploader({
           // Only get the presigned URL and log it, don't upload yet
           const presignedData = await getPresignedUrl()
           console.log("Presigned URL response:", presignedData)
-
           setFileKey(presignedData.fileKey);
-          setUploadUrl(presignedData.uploadUrl)
 
-          const uploadResponse = await fetch(presignedData.uploadUrl, {
-            method: 'PUT',
-            body: selectedFile,
-            headers: {
-              'Content-Type': selectedFile.type,
-            },
-          })
+          // Extract the URL and fields from the presigned POST data
+          const { url, fields } = presignedData.uploadData;
+          
+          // Create a FormData object and append all the fields
+          const formData = new FormData();
+          Object.entries(fields).forEach(([key, value]) => {
+            formData.append(key, value as string);
+          });
+          
+          // Append the file last
+          formData.append('file', selectedFile);
+          
+          // Upload to S3 using the presigned POST
+          const uploadResponse = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          });
 
           if (!uploadResponse.ok) {
             const errorText = await uploadResponse.text();
