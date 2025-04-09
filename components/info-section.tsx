@@ -22,7 +22,7 @@ export default function InfoSection({ songs }: InfoSectionProps) {
         <CardContent>
           <div className="space-y-4 text-sm">
             <p>
-              <strong>Shazoom</strong> is a song recognition application similar to Shazam. It allows you to identify
+              <strong>Shazoom</strong> is a song recognition application created using Avery Wang's (founder of Shazam) original paper from 2003. It allows you to identify
               songs from audio samples.
             </p>
             <p>Upload your own audio file or use one of our example samples to test the application's functionality.</p>

@@ -2,17 +2,20 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Upload, Mic, Loader2, Clock } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { getPresignedUrl } from "@/utils/api" // Import the API function
 
 interface AudioUploaderProps {
-  onAudioSubmit: (file: File) => void
+  onAudioSubmit: (fileKey: string) => void // Changed to accept fileKey instead of File
   isProcessing: boolean
   selectedFile: File | null
   setSelectedFile: (file: File | null) => void
   elapsedTime: number
+  isUploading?: boolean // Add new prop to track upload status
+  setIsUploading?: (isUploading: boolean) => void // Add setter for upload status
 }
 
 export default function AudioUploader({
@@ -23,7 +26,49 @@ export default function AudioUploader({
   elapsedTime,
 }: AudioUploaderProps) {
   const [dragActive, setDragActive] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [fileKey, setFileKey] = useState<string | null>(null)
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Log presigned URL info when a file is selected, but don't upload yet
+  useEffect(() => {
+    const uploadToS3 = async () => {
+      if (selectedFile) {
+        try {
+          setUploadError(null)
+          
+          // Only get the presigned URL and log it, don't upload yet
+          const presignedData = await getPresignedUrl()
+          console.log("Presigned URL response:", presignedData)
+
+          setFileKey(presignedData.fileKey);
+          setUploadUrl(presignedData.uploadUrl)
+
+          const uploadResponse = await fetch(presignedData.uploadUrl, {
+            method: 'PUT',
+            body: selectedFile,
+            headers: {
+              'Content-Type': selectedFile.type,
+            },
+          })
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            throw new Error(`Upload failed with status: ${uploadResponse.status}. Details: ${errorText}`);
+          }
+
+          console.log("File uploaded successfully to:", presignedData.uploadUrl)
+
+        } catch (error) {
+          console.error('Error getting presigned URL:', error)
+          setUploadError('Failed to prepare for upload. Please try again.')
+        }
+      }
+    }
+    
+    uploadToS3()
+  }, [selectedFile])
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -56,8 +101,8 @@ export default function AudioUploader({
   }
 
   const handleSubmit = () => {
-    if (selectedFile) {
-      onAudioSubmit(selectedFile)
+    if (fileKey) {
+      onAudioSubmit(fileKey)
     }
   }
 
@@ -92,13 +137,25 @@ export default function AudioUploader({
         </div>
       </div>
 
+      {uploadError && (
+        <Alert className="mt-4 bg-red-50 border-red-200">
+          <AlertDescription className="text-red-600">
+            {uploadError}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {selectedFile && (
         <div className="mt-4 p-3 bg-purple-50 rounded-lg flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Mic className="h-5 w-5 text-purple-600" />
             <span className="text-sm font-medium truncate max-w-[200px]">{selectedFile.name}</span>
           </div>
-          <Button onClick={handleSubmit} disabled={isProcessing} className="bg-purple-600 hover:bg-purple-700">
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isProcessing || !fileKey} 
+            className="bg-purple-600 hover:bg-purple-700"
+          >
             {isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

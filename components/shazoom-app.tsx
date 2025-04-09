@@ -10,6 +10,7 @@ import InfoSection from "@/components/info-section"
 import { SongDatabase } from "@/lib/song-database"
 import type { Song } from "@/lib/types"
 import { Progress } from "@/components/ui/progress"
+import { warmupShazoomLambda } from "@/utils/api"
 
 export default function ShazoomApp() {
   const [identifiedSong, setIdentifiedSong] = useState<Song | null>(null)
@@ -19,6 +20,18 @@ export default function ShazoomApp() {
   const [confidenceScore, setConfidenceScore] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [startTime, setStartTime] = useState<number | null>(null)
+
+  // Warm up Shazoom lambda once on mount
+  useEffect(() => {
+    void (async () => {
+      try {
+        const response = await warmupShazoomLambda();
+        console.log("Lambda warmed up successfully");
+      } catch (err) {
+        console.error("Lambda warmup failed:", err);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
