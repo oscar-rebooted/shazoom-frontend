@@ -26,6 +26,7 @@ export default function AudioUploader({
   elapsedTime,
 }: AudioUploaderProps) {
   const [dragActive, setDragActive] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [fileKey, setFileKey] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -36,7 +37,8 @@ export default function AudioUploader({
       if (selectedFile) {
         try {
           setUploadError(null)
-          
+          setIsUploading(true)
+
           // Only get the presigned URL and log it, don't upload yet
           const presignedData = await getPresignedUrl()
           console.log("Presigned URL response:", presignedData)
@@ -66,10 +68,11 @@ export default function AudioUploader({
           }
 
           console.log("File uploaded successfully to:", presignedData.uploadUrl)
-
+          setIsUploading(false)
         } catch (error) {
           console.error('Error getting presigned URL:', error)
           setUploadError('Failed to prepare for upload. Please try again.')
+          setIsUploading(false)
         }
       }
     }
@@ -160,10 +163,15 @@ export default function AudioUploader({
           </div>
           <Button 
             onClick={handleSubmit} 
-            disabled={isProcessing || !fileKey} 
+            disabled={isProcessing || !fileKey || isUploading} 
             className="bg-purple-600 hover:bg-purple-700"
           >
-            {isProcessing ? (
+            {isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Identifying...

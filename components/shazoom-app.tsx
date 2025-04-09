@@ -12,6 +12,7 @@ import type { Song } from "@/lib/types"
 import { Progress } from "@/components/ui/progress"
 import { warmupShazoomLambda } from "@/utils/api"
 import { findSong } from "@/utils/api"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function ShazoomApp() {
   const [identifiedSong, setIdentifiedSong] = useState<Song | null>(null)
@@ -123,7 +124,7 @@ export default function ShazoomApp() {
 
               {identifiedSong && !isIdentifying && (
                 <div className="mt-6 p-4 bg-purple-100 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">Closest match in database:</h3>
+                  <h3 className="text-lg font-semibold mb-2">Most similar song in database:</h3>
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-purple-200 rounded-md overflow-hidden">
                       <img
@@ -144,6 +145,31 @@ export default function ShazoomApp() {
                         </div>
                         <Progress value={confidenceScore} className="h-2" />
                       </div>
+                      {confidenceScore < 40 && (
+                        <div className="mt-2">
+                          <Alert className="bg-red-50 border-red-200">
+                            <AlertDescription className="text-red-600 flex items-center gap-2">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="lucide lucide-alert-triangle"
+                              >
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                              </svg>
+                              Low confidence: likely not a match.
+                            </AlertDescription>
+                          </Alert>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
