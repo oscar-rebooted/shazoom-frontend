@@ -11,6 +11,7 @@ import { SongDatabase } from "@/lib/song-database"
 import type { Song } from "@/lib/types"
 import { Progress } from "@/components/ui/progress"
 import { warmupShazoomLambda } from "@/utils/api"
+import { findSong } from "@/utils/api"
 
 export default function ShazoomApp() {
   const [identifiedSong, setIdentifiedSong] = useState<Song | null>(null)
@@ -49,28 +50,37 @@ export default function ShazoomApp() {
     }
   }, [isIdentifying, startTime])
 
-  const handleAudioSubmit = (audioFile: File | string) => {
+  const handleAudioSubmit = async (fileKey: string) => {
     setIsIdentifying(true)
     setStartTime(Date.now())
 
-    if (typeof audioFile === "string") {
-      setProcessingId(audioFile)
-    } else {
-      setProcessingId(null)
-      setSelectedFile(audioFile)
-    }
+    try {
+      const result = await findSong(fileKey)
+      console.log("API response:", result)
+      
+      if (result.track_metadata) {
+        setIdentifiedSong({
+          id: result.track_metadata.id,
+          title: result.track_metadata.title,
+          artist: result.track_metadata.artist,
+          album: "n.a.",
+          year: 2000,
+          genre: "n.a.",
+          albumCover: "/placeholder.svg"
+        })
+      }
 
-    // Simulate song identification with a delay
-    setTimeout(() => {
-      // For demo purposes, randomly select a song from the database
-      const randomIndex = Math.floor(Math.random() * SongDatabase.length)
-      setIdentifiedSong(SongDatabase[randomIndex])
-      // Generate a random confidence score between 60 and 98
-      setConfidenceScore(Math.floor(Math.random() * 39) + 60)
+      if (result.confidence) {
+        const scorePercentage = Math.round(result.confidence * 100)
+        setConfidenceScore(scorePercentage)
+      }
+    } catch (error) {
+      console.log("Error identifying song:", error)
+    } finally {
       setIsIdentifying(false)
       setProcessingId(null)
       setStartTime(null)
-    }, 2000)
+    }
   }
 
   return (

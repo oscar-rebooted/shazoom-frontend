@@ -162,7 +162,7 @@ export default function AudioUploader({
                 Identifying...
               </>
             ) : (
-              "Identify Song"
+              "Identify song"
             )}
           </Button>
         </div>

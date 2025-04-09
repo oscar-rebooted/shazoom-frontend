@@ -24,7 +24,7 @@ export const getPresignedUrl = async () => {
   }
 };
 
-export const findSong = async (fileKey) => {
+export const findSong = async (fileKey: string) => {
   try {
     const response = await fetch(`${API_BASE_URL}/find-song`, {
       method: 'POST',
