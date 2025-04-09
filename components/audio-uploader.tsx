@@ -29,7 +29,10 @@ export default function AudioUploader({
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [fileKey, setFileKey] = useState<string | null>(null)
+  const [fileSizeError, setFileSizeError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const MAX_FILE_SIZE = 20 * 1024 * 1024 // 20 MB in bytes
 
   // Log presigned URL info when a file is selected, but don't upload yet
   useEffect(() => {
@@ -99,14 +102,30 @@ export default function AudioUploader({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0]
       if (file.type.includes("audio/")) {
-        setSelectedFile(file)
+        if (file.size < MAX_FILE_SIZE) {
+          setSelectedFile(file)
+          setFileSizeError(null)
+        } else {
+          setSelectedFile(null)
+          setFileSizeError("Max. file size 20MB");
+        }
       }
     }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0])
+      const file = e.target.files[0]
+      if (file.size < MAX_FILE_SIZE){
+        setSelectedFile(file)
+        setFileSizeError(null);
+      } else {
+        setSelectedFile(null)
+        setFileSizeError("Max. file size 20MB");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''        
+        }
+      }
     }
   }
 
@@ -141,11 +160,35 @@ export default function AudioUploader({
                 browse
               </span>
             </p>
-            <p className="text-xs text-gray-500 mt-1">Supports MP3, WAV, and other audio formats</p>
+            <p className="text-xs text-gray-500 mt-1">Supports MP3, WAV, FLAC, and other audio formats</p>
           </div>
           <input ref={fileInputRef} type="file" accept="audio/*" className="hidden" onChange={handleFileChange} />
         </div>
       </div>
+
+      {fileSizeError && (
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-blue-700 text-sm flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mr-2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {fileSizeError}
+          </p>
+        </div>
+      )}
 
       {uploadError && (
         <Alert className="mt-4 bg-red-50 border-red-200">
