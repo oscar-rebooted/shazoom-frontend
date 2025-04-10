@@ -14,15 +14,15 @@ interface ExampleSamplesProps {
 const exampleSamples = [
   {
     id: "sample1",
-    title: "Pop Song Sample",
-    description: "A 10-second clip from a song in our database",
+    title: "Brazilian Pop Song Sample",
+    description: "A clip from a song in our database",
     duration: "0:10",
   },
   {
     id: "sample2",
-    title: "Rock Song Sample",
-    description: "A 15-second clip from a song not in our database",
-    duration: "0:15",
+    title: "1960s Pop Song Sample",
+    description: "A clip from a song not in our database",
+    duration: "0:24",
   },
 ]
 

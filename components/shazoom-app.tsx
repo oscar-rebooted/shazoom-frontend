@@ -66,7 +66,6 @@ export default function ShazoomApp() {
           artist: result.track_metadata.artist,
           album: "n.a.",
           year: 2000,
-          genre: "n.a.",
           albumCover: "/placeholder.svg"
         })
       }
