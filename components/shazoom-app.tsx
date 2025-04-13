@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import AudioUploader from "@/components/audio-uploader"
 import ExampleSamples from "@/components/example-samples"
@@ -18,7 +17,6 @@ export default function ShazoomApp() {
   const [identifiedSong, setIdentifiedSong] = useState<Song | null>(null)
   const [isIdentifying, setIsIdentifying] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [processingId, setProcessingId] = useState<string | null>(null)
   const [confidenceScore, setConfidenceScore] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [startTime, setStartTime] = useState<number | null>(null)
@@ -27,13 +25,13 @@ export default function ShazoomApp() {
   useEffect(() => {
     void (async () => {
       try {
-        const response = await warmupShazoomLambda();
-        console.log("Lambda warmed up successfully");
+        const response = await warmupShazoomLambda()
+        console.log("Lambda warmed up successfully")
       } catch (err) {
-        console.error("Lambda warmup failed:", err);
+        console.error("Lambda warmup failed:", err)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null
@@ -58,7 +56,7 @@ export default function ShazoomApp() {
     try {
       const result = await findSong(fileKey)
       console.log("API response:", result)
-      
+
       if (result.track_metadata) {
         setIdentifiedSong({
           id: result.track_metadata.id,
@@ -66,7 +64,7 @@ export default function ShazoomApp() {
           artist: result.track_metadata.artist,
           album: "n.a.",
           year: 2000,
-          albumCover: "/placeholder.svg"
+          albumCover: "/placeholder.svg",
         })
       }
 
@@ -78,7 +76,6 @@ export default function ShazoomApp() {
       console.log("Error identifying song:", error)
     } finally {
       setIsIdentifying(false)
-      setProcessingId(null)
       setStartTime(null)
     }
   }
@@ -98,12 +95,9 @@ export default function ShazoomApp() {
               <CardDescription>Upload an audio file or use one of our examples to identify a song</CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="upload" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="upload">Upload audio</TabsTrigger>
-                  <TabsTrigger value="examples">Example samples</TabsTrigger>
-                </TabsList>
-                <TabsContent value="upload">
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Upload audio</h3>
                   <AudioUploader
                     onAudioSubmit={handleAudioSubmit}
                     isProcessing={isIdentifying}
@@ -111,16 +105,18 @@ export default function ShazoomApp() {
                     setSelectedFile={setSelectedFile}
                     elapsedTime={elapsedTime}
                   />
-                </TabsContent>
-                <TabsContent value="examples">
-                  <ExampleSamples
-                    onSampleSelect={handleAudioSubmit}
-                    processingId={processingId}
-                    elapsedTime={elapsedTime}
-                  />
-                </TabsContent>
-              </Tabs>
+                </div>
 
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Example samples</h3>
+                  <p className="text-sm text-gray-500 mb-3">Drag and drop any sample into the upload area above</p>
+                  <ExampleSamples
+                    isProcessing={isIdentifying}
+                    elapsedTime={elapsedTime}
+                    onSampleSelect={handleAudioSubmit}
+                  />
+                </div>
+              </div>
               {identifiedSong && !isIdentifying && (
                 <div className="mt-6 p-4 bg-purple-100 rounded-lg">
                   <h3 className="text-lg font-semibold mb-2">Most similar song in database:</h3>
