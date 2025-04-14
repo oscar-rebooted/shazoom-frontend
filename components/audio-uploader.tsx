@@ -182,7 +182,12 @@ export default function AudioUploader({
       >
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="p-3 rounded-full bg-purple-100">
-            <Upload className="h-6 w-6 text-purple-600" />
+            <span
+              className="text-purple-600 cursor-pointer hover:underline"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="h-6 w-6 text-purple-600" />
+            </span>
           </div>
           <div>
             <p className="text-sm font-medium">

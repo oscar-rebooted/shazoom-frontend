@@ -2,8 +2,10 @@
 
 import type React from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Play } from "lucide-react"
+import { Play, Pause } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import ProcessingAlert from "@/components/processing-alert"
+import { useRef, useState } from "react"
 
 interface ExampleSamplesProps {
   isProcessing: boolean
@@ -18,17 +20,21 @@ const exampleSamples = [
     description: "Clip from song in database",
     duration: "0:10",
     fileKey: "clips/Menina_10secs.mp3",
+    audioPath: "/clips/Menina_10secs.mp3"
   },
   {
     id: "sample2",
     title: "1960s Pop Sample",
     description: "Clip from song not in database",
     duration: "0:24",
-    fileKey: "clips/Hey_Jude_24_secs.webm", 
+    fileKey: "clips/Hey_Jude_24_secs.mp3", 
+    audioPath: "/clips/Hey_Jude_24_secs.mp3"
   },
 ]
 
 export default function ExampleSamples({ isProcessing, elapsedTime, onSampleSelect }: ExampleSamplesProps) {
+  const [playingSample, setPlayingSample] = useState<string | null>(null)
+  const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({})
   const handleDragStart = (e: React.DragEvent, sample: (typeof exampleSamples)[0]) => {
     e.dataTransfer.setData(
       "application/json",
@@ -39,6 +45,33 @@ export default function ExampleSamples({ isProcessing, elapsedTime, onSampleSele
       }),
     )
     e.dataTransfer.effectAllowed = "copy"
+  }
+
+  const togglePlay = (sampleId: string) => {
+    const audioElement = audioRefs.current[sampleId]
+
+    if (!audioElement) return
+
+    if (playingSample === sampleId) {
+      // Currently playing this sample, so pause it
+      audioElement.pause()
+      setPlayingSample(null)
+    } else {
+      // Pause any currently playing sample
+      if (playingSample && audioRefs.current[playingSample]) {
+        audioRefs.current[playingSample]?.pause()
+      }
+
+      // Play the new sample
+      audioElement.play()
+      setPlayingSample(sampleId)
+    }
+  }
+
+  const handleAudioEnded = (sampleId: string) => {
+    if (playingSample === sampleId) {
+      setPlayingSample(null)
+    }
   }
 
   return (
@@ -53,9 +86,27 @@ export default function ExampleSamples({ isProcessing, elapsedTime, onSampleSele
           >
             <CardContent className="p-0">
               <div className="flex items-center p-4">
-                <div className="w-12 h-12 bg-purple-200 rounded-md flex items-center justify-center mr-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-12 h-12 bg-purple-200 rounded-md flex items-center justify-center mr-4 hover:bg-purple-300"
+                  onClick={() => togglePlay(sample.id)}
+                >
+                  {playingSample === sample.id ? (
+                    <Pause className="h-6 w-6 text-purple-600" />
+                  ) : (
                   <Play className="h-6 w-6 text-purple-600" />
-                </div>
+                )}
+                </Button>
+                <audio
+                  ref={el => {
+                    if (audioRefs.current) {
+                      audioRefs.current[sample.id] = el;
+                    }
+                  }}
+                  src={sample.audioPath}
+                  onEnded={() => handleAudioEnded(sample.id)}
+                />
                 <div className="flex-1">
                   <h3 className="font-medium">{sample.title}</h3>
                   <p className="text-sm text-gray-500">{sample.description}</p>
