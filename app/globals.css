@@ -2,8 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Geist  Font */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-v1.4.01/webfonts/Geist-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-v1.4.01/webfonts/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-v1.4.01/webfonts/Geist-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono Font */
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/fonts/GeistMono-1.4.01/webfonts/GeistMono-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/fonts/GeistMono-1.4.01/webfonts/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/fonts/GeistMono-1.4.01/webfonts/GeistMono-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Geist', Arial, Helvetica, sans-serif;
+}
+
+code, pre {
+  font-family: 'GeistMono', monospace;
 }
 
 @layer utilities {
