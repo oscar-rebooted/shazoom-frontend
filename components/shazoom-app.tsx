@@ -59,12 +59,11 @@ export default function ShazoomApp() {
 
       if (result.track_metadata) {
         setIdentifiedSong({
-          id: result.track_metadata.id,
-          title: result.track_metadata.title,
-          artist: result.track_metadata.artist,
-          album: "n.a.",
-          year: 2000,
-          albumCover: "/placeholder.svg",
+          title: result.track_metadata.title || "n.a.",
+          artist: result.track_metadata.artist || "n.a.",
+          album: result.track_metadata.album || "n.a.",
+          year: result.track_metadata.year || "n.a.",
+          albumCover: result.track_metadata.albumCover || "/placeholder.svg",
         })
       }
 
