@@ -126,7 +126,7 @@ export default function SongSearch({ songs }: SongSearchProps) {
 
         <div className="space-y-3">
           {searchResults.map((song) => (
-            <div key={song.id} className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
+            <div key={`${song.artist}-${song.title}`} className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
               <div className="w-12 h-12 bg-purple-200 rounded-md overflow-hidden">
                 <img
                   src={song.albumCover || "/placeholder.svg"}

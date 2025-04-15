@@ -6,12 +6,12 @@ import AudioUploader from "@/components/audio-uploader"
 import ExampleSamples from "@/components/example-samples"
 import SongSearch from "@/components/song-search"
 import InfoSection from "@/components/info-section"
-import { SongDatabase } from "@/lib/song-database"
 import type { Song } from "@/lib/types"
 import { Progress } from "@/components/ui/progress"
 import { warmupShazoomLambda } from "@/utils/api"
 import { findSong } from "@/utils/api"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useSongDatabase } from "@/lib/song-database-context"
 
 export default function ShazoomApp() {
   const [identifiedSong, setIdentifiedSong] = useState<Song | null>(null)
@@ -20,6 +20,7 @@ export default function ShazoomApp() {
   const [confidenceScore, setConfidenceScore] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [startTime, setStartTime] = useState<number | null>(null)
+  const { songs, isLoading, error } = useSongDatabase()
 
   // Warm up Shazoom lambda once on mount
   useEffect(() => {
@@ -177,13 +178,13 @@ export default function ShazoomApp() {
               <CardDescription>Search for songs in our database</CardDescription>
             </CardHeader>
             <CardContent>
-              <SongSearch songs={SongDatabase} />
+              <SongSearch songs={songs} />
             </CardContent>
           </Card>
         </div>
 
         <div>
-          <InfoSection songs={SongDatabase} />
+          <InfoSection songs={songs} />
         </div>
       </div>
     </div>

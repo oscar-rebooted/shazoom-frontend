@@ -1,5 +1,6 @@
 import type { Metadata } from "next/types"
 import ShazoomApp from "@/components/shazoom-app"
+import { SongDatabaseProvider } from "@/lib/song-database-context"
 
 export const metadata: Metadata = {
   title: "Shazoom - Audio Recognition",
@@ -9,7 +10,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 p-4 md:p-8">
-      <ShazoomApp />
+      <SongDatabaseProvider>
+        <ShazoomApp />
+      </SongDatabaseProvider>
     </main>
   )
 }
