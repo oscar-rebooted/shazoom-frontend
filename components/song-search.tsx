@@ -137,7 +137,7 @@ export default function SongSearch({ songs }: SongSearchProps) {
               <div>
                 <p className="font-medium">{song.title}</p>
                 <p className="text-sm text-gray-600">{song.artist}</p>
-                <p className="text-xs text-gray-500">{song.album}</p>
+                <p className="text-xs text-gray-500">{song.year}</p>
               </div>
             </div>
           ))}

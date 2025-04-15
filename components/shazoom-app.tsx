@@ -131,9 +131,7 @@ export default function ShazoomApp() {
                     <div className="flex-1">
                       <p className="font-bold text-lg">{identifiedSong.title}</p>
                       <p className="text-gray-600">{identifiedSong.artist}</p>
-                      <p className="text-sm text-gray-500">
-                        {identifiedSong.album} ({identifiedSong.year})
-                      </p>
+                      <p className="text-sm text-gray-500">{identifiedSong.year}</p>
                       <div className="mt-2">
                         <div className="flex justify-between mb-1">
                           <span className="text-sm font-medium">Confidence: {confidenceScore}%</span>
