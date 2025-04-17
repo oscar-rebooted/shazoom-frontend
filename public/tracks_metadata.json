@@ -51,11 +51,17 @@
     "original_filename": "Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars [OPf0YbXqDm0].mp3",
     "youtube": {
       "youtube_title_v1": "Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars",
-      "youtube_title_v2": "Mark Ronson - Uptown Funkft. Bruno Mars",
-      "youtube_title_v3": "Uptown Funkft. Bruno Mars",
+      "youtube_title_v2": "Mark Ronson - Uptown Funk ft. Bruno Mars",
+      "youtube_title_v3": "Uptown Funk",
       "youtube_artist": "Mark Ronson"
     },
-    "spotify": {}
+    "spotify": {
+      "title": "Uptown Funk (feat. Bruno Mars)",
+      "artist": "Mark Ronson, Bruno Mars",
+      "album": "Uptown Special",
+      "year": 2015,
+      "albumCover": "https://i.scdn.co/image/ab67616d0000b273e419ccba0baa8bd3f3d7abf2"
+    }
   },
   "4": {
     "original_filename": "Crazy Frog - Axel F (Official Video) [k85mRPqvMbE].mp3",

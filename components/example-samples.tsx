@@ -16,15 +16,15 @@ interface ExampleSamplesProps {
 const exampleSamples = [
   {
     id: "sample1",
-    title: "Brazilian Pop Sample",
+    title: "2010s Pop Sample",
     description: "Clip from song in database",
     duration: "0:10",
-    fileKey: "clips/Menina_10secs.mp3",
-    audioPath: "/clips/Menina_10secs.mp3"
+    fileKey: "clips/Uptown_Funk_10secs.mp3",
+    audioPath: "/clips/Uptown_Funk_10secs.mp3"
   },
   {
     id: "sample2",
-    title: "1960s Pop Sample",
+    title: "1960s Rock Sample",
     description: "Clip from song not in database",
     duration: "0:24",
     fileKey: "clips/Hey_Jude_24_secs.mp3", 

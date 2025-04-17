@@ -82,6 +82,9 @@ export default function ShazoomApp() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <div className="w-full bg-amber-100 p-3 text-center text-amber-800 mb-4 rounded-md">
+            Side project to learn about audio fingerprinting - uses dummy database of 15 songs
+      </div>
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-purple-800 mb-2">Shazoom</h1>
         <p className="text-lg text-gray-600">Identify songs from audio samples</p>
